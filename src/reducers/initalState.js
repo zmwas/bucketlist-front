@@ -1,5 +1,13 @@
 export default {
-  buckets: [],
   user: {},
-  bucket: {},
+  buckets: {
+    error:false,
+    loading:false,
+    data:{
+      pages:0,
+      status:'',
+      data:[]
+    }
+
+  },
 };

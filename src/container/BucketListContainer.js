@@ -55,7 +55,6 @@ class BucketListContainer extends React.Component {
     render() {
 
         const buckets = this.props.buckets;
-
         return (
             <div>
 
@@ -103,7 +102,11 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
     return {
-        buckets: state.buckets,
+        error: state.buckets.error,
+        loading:state.buckets.loading,
+        pages:state.buckets.data.pages,
+        buckets: state.buckets.data.data,
+
     };
 }
 

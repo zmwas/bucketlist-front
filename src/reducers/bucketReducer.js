@@ -7,7 +7,7 @@ export default function bucketReducer(state = initalState.buckets, action) {
     case types.CREATE_BUCKET_SUCCESS:
       return [Object.assign({}, action.bucket)];
     case types.GET_BUCKETS_SUCCESS:
-      return action.buckets;
+      return Object.assign({},state,{error:action.error,loading:action.loading,data:action.payload});
     case types.SEARCH_BUCKETS_SUCCESS:
         return action.buckets;
     case types.UPDATE_BUCKET_SUCCESS:

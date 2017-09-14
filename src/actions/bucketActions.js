@@ -8,8 +8,8 @@ export function createBucketSuccess(bucket) {
 export function createBucketFailure(response) {
     return {type: types.CREATE_BUCKET_FAILURE};
 }
-export function getBucketsSuccess(buckets) {
-    return {type: types.GET_BUCKETS_SUCCESS, buckets};
+export function getBucketsSuccess(payload) {
+    return {type: types.GET_BUCKETS_SUCCESS, payload,error:false,loading:false};
 }
 export function getBucketsFailure(buckets) {
     return {type: types.GET_BUCKETS_FAILURE, buckets};

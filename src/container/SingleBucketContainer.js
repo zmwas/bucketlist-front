@@ -115,6 +115,7 @@ class SingleBucketContainer extends React.Component {
 
 
     render() {
+        console.log(this.props)
         return (
             <div>
                 <SingleBucket
@@ -158,7 +159,7 @@ function getBucketbyId(buckets, id) {
 function mapStateToProps(state, props) {
     let bucket = {title: '', description: '', bucketlistitems: []};
     const bucketId = props.match.params.id;
-    const buckets = state.buckets;
+    const buckets = state.buckets.data.data;
     if (buckets.length > 0 && bucketId) {
         bucket = getBucketbyId(buckets, bucketId);
     }
