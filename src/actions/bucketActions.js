@@ -2,8 +2,12 @@ import BucketService from '../api/bucketService';
 import * as types from './actiontypes';
 
 
-export function createBucketSuccess(bucket) {
-    return {type: types.CREATE_BUCKET_SUCCESS, bucket};
+export function createBucketLoading(status){
+    return {type: types.CREATE_BUCKET_LOADING,loading:status,error:false};
+}
+
+export function createBucketSuccess(payload) {
+    return {type: types.CREATE_BUCKET_SUCCESS, payload, error: false, loading: false};
 }
 
 export function createBucketFailure(response) {
@@ -22,8 +26,12 @@ export function getBucketsFailure(buckets) {
     return {type: types.GET_BUCKETS_FAILURE, buckets};
 }
 
-export function searchBucketsSuccess(buckets) {
-    return {type: types.SEARCH_BUCKETS_SUCCESS, buckets};
+export function searchBucketsLoading(status) {
+    return {type: types.SEARCH_BUCKETS_LOADING, error:false, loading:status};
+}
+
+export function searchBucketsSuccess(payload) {
+    return {type: types.SEARCH_BUCKETS_SUCCESS, payload, error:false, loading:false};
 }
 
 export function searchBucketsFailure(buckets) {
@@ -59,9 +67,13 @@ export function deleteBucketItemSuccess(bucket) {
 }
 
 export function createBucket(bucket) {
-    return dispatch => BucketService.post('/bucketlist/', bucket, (status, data) => dispatch(createBucketSuccess(data))).catch((error) => {
+    return dispatch => {
+        dispatch(createBucketLoading(true));
+        BucketService.post('/bucketlist/', bucket, (status, data) => dispatch(createBucketSuccess(data))).catch((error) => {
         throw (error);
     });
+
+    };
 }
 
 export function getBucket() {
@@ -74,9 +86,14 @@ export function getBucket() {
 }
 
 export function searchBucket(params) {
-    return dispatch => BucketService.search('/bucketlist/', params, (status, data) => dispatch(searchBucketsSuccess(data))).catch((error) => {
-        throw (error);
-    });
+    return dispatch => {
+        dispatch(searchBucketsLoading(true))
+        BucketService.search('/bucketlist/', params, (status, data) => dispatch(searchBucketsSuccess(data)))
+            .catch((error) => {
+                throw (error);
+            });
+
+    };
 }
 
 export function updateBucket(bucket) {
