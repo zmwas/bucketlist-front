@@ -10,6 +10,7 @@ import {withRouter} from 'react-router-dom';
 import * as actions from '../actions/bucketActions';
 import BucketList from '../components/BucketLists';
 import Error from '../components/Error';
+import Loading from '../components/Loading';
 import NoBucketLists from '../components/NoBucketLists'
 import SingleBucketContainer from './SingleBucketContainer';
 import AddBucketsContainer from './AddBucketsContainer';
@@ -55,6 +56,14 @@ class BucketListContainer extends React.Component {
     render() {
 
         const buckets = this.props.buckets;
+        const loading = this.props.loading;
+        const error = this.props.error;
+        console.log(loading)
+        if(loading==true){
+            <Loading/>
+        }
+
+
         return (
             <div>
 
@@ -64,8 +73,7 @@ class BucketListContainer extends React.Component {
 
                         <div className="master">
                             <AddBucketsContainer open={this.state.open} cancel={this.toggleDialog}/>
-                            {buckets.length>0?<BucketList buckets={buckets} add={this.toggleDialog}/>:
-                                <NoBucketLists add={this.toggleDialog}/>}
+                            <BucketList buckets={buckets} add={this.toggleDialog}/>
 
                         </div>:
                     </Cell>

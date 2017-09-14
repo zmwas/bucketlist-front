@@ -27,6 +27,9 @@ export default function bucketReducer(state = initalState.buckets, action) {
     case types.UPDATE_BUCKET_ITEM_SUCCESS:
       return [...state.filter(bucket => bucket.id !== action.bucket.id),
         Object.assign({}, action.bucket)];
+      case types.GET_BUCKETS_LOADING:
+          return Object.assign({},state,{error:action.error,loading:action.loading})
+
   }
   return state;
 }

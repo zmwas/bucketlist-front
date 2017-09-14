@@ -3,20 +3,29 @@ import * as types from './actiontypes';
 
 
 export function createBucketSuccess(bucket) {
-    return {type: types.CREATE_BUCKET_SUCCESS,bucket};
+    return {type: types.CREATE_BUCKET_SUCCESS, bucket};
 }
+
 export function createBucketFailure(response) {
     return {type: types.CREATE_BUCKET_FAILURE};
 }
-export function getBucketsSuccess(payload) {
-    return {type: types.GET_BUCKETS_SUCCESS, payload,error:false,loading:false};
+
+export function getBucketsLoading(status) {
+    return {type: types.GET_BUCKETS_LOADING, loading: status, error: false};
 }
+
+export function getBucketsSuccess(payload) {
+    return {type: types.GET_BUCKETS_SUCCESS, payload, error: false, loading: false};
+}
+
 export function getBucketsFailure(buckets) {
     return {type: types.GET_BUCKETS_FAILURE, buckets};
 }
+
 export function searchBucketsSuccess(buckets) {
     return {type: types.SEARCH_BUCKETS_SUCCESS, buckets};
 }
+
 export function searchBucketsFailure(buckets) {
     return {type: types.SEARCH_BUCKETS_FAILURE, buckets};
 }
@@ -24,15 +33,19 @@ export function searchBucketsFailure(buckets) {
 export function updateBucketSuccess(bucket) {
     return {type: types.UPDATE_BUCKET_SUCCESS, bucket};
 }
+
 export function updateBucketFailure(bucket) {
     return {type: types.UPDATE_BUCKET_FAILURE, bucket};
 }
+
 export function deleteBucketSuccess(bucket) {
     return {type: types.DELETE_BUCKET_SUCCESS, bucket};
 }
+
 export function deleteBucketFailure(bucket) {
     return {type: types.DELETE_BUCKET_FAILURE, bucket};
 }
+
 export function createBucketItemSuccess(response) {
     return {type: types.CREATE_BUCKET_ITEM_SUCCESS};
 }
@@ -52,14 +65,16 @@ export function createBucket(bucket) {
 }
 
 export function getBucket() {
-    return dispatch => BucketService.get('/bucketlist/', (status, data) => dispatch(getBucketsSuccess(data))).catch((error) => {
-        return dispatch(getBucketsFailure(error))
-
-    });
+    return dispatch => {
+        dispatch(getBucketsLoading(true));
+        BucketService.get('/bucketlist/', (status, data) => dispatch(getBucketsSuccess(data))).catch((error) => {
+            return dispatch(getBucketsFailure(error));
+        });
+    };
 }
 
 export function searchBucket(params) {
-    return dispatch => BucketService.search('/bucketlist/',params, (status, data) => dispatch(searchBucketsSuccess(data))).catch((error) => {
+    return dispatch => BucketService.search('/bucketlist/', params, (status, data) => dispatch(searchBucketsSuccess(data))).catch((error) => {
         throw (error);
     });
 }
