@@ -11,7 +11,7 @@ import * as actions from '../actions/bucketActions';
 import BucketList from '../components/BucketLists';
 import Error from '../components/Error';
 import Loading from '../components/Loading';
-import NoBucketLists from '../components/NoBucketLists'
+import NoBucketLists from '../components/NoBucketLists';
 import SingleBucketContainer from './SingleBucketContainer';
 import AddBucketsContainer from './AddBucketsContainer';
 import BucketsContainer from './AddBucketsContainer';
@@ -21,7 +21,7 @@ class BucketListContainer extends React.Component {
         super(props);
         this.state = {
             open: false,
-            exists:true
+            exists: true
         };
         this.toggleDialog = this.toggleDialog.bind(this);
     }
@@ -41,7 +41,7 @@ class BucketListContainer extends React.Component {
             console.log(nextProps.location.state);
             this.setState({open: false});
             this.props.actions.getBucket();
-            this.componentDidMount()
+            this.componentDidMount();
             nextProps.location.state = "";
         }
 
@@ -50,17 +50,16 @@ class BucketListContainer extends React.Component {
 
     toggleDialog() {
         this.setState({open: !this.state.open});
+        console.log("new state", this.state.open);
     }
-
 
     render() {
 
         const buckets = this.props.buckets;
         const loading = this.props.loading;
         const error = this.props.error;
-        console.log(loading)
-        if(loading==true){
-            <Loading/>
+        if (loading == true) {
+            return (<Loading/>);
         }
 
 
@@ -70,12 +69,13 @@ class BucketListContainer extends React.Component {
                 <Grid>
 
                     <Cell col={4} phone={3}>
-
                         <div className="master">
                             <AddBucketsContainer open={this.state.open} cancel={this.toggleDialog}/>
-                            <BucketList buckets={buckets} add={this.toggleDialog}/>
+                            {loading == false && buckets.length == 0 ? <NoBucketLists add={this.toggleDialog}/> :
+                                < BucketList buckets={buckets} add={this.toggleDialog}/>
+                            }
+                        </div>
 
-                        </div>:
                     </Cell>
 
                     <Cell col={1} hidePhone hidetablet>
@@ -111,8 +111,8 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
     return {
         error: state.buckets.error,
-        loading:state.buckets.loading,
-        pages:state.buckets.data.pages,
+        loading: state.buckets.loading,
+        pages: state.buckets.data.pages,
         buckets: state.buckets.data.data,
 
     };
