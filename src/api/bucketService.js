@@ -29,30 +29,41 @@ class BucketService {
     }
 
     post(path, data, callback) {
+        const token = window.localStorage.getItem('token');
+
         return this.service.request({
             method: 'POST',
             url: path,
             responseType: 'json',
             data,
+            headers: {Authorization: `Bearer ${token}`},
+
 
         }).then(response => callback(response.status, response.data));
     }
 
     get (path, callback) {
+        const token = window.localStorage.getItem('token');
 
         return this.service.request({
             method: 'GET',
             url: path,
             responseType: 'json',
+            headers: {Authorization: `Bearer ${token}`},
+
         }).then(response => callback(response.status, response.data));
     }
 
     put(path, data, callback) {
+        const token = window.localStorage.getItem('token');
+
         return this.service.request({
             method: 'PUT',
             url: path,
             responseType: 'json',
             data,
+            headers: {Authorization: `Bearer ${token}`},
+
 
         }).then(response => callback(response.status, response.data));
     }
