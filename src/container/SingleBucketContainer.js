@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import * as actions from '../actions/bucketActions';
 import SingleBucket from '../components/SingleBucket';
 import AddItemDialog from '../components/AddItemDialog';
+import Loading from '../components/Loading';
 
 class SingleBucketContainer extends React.Component {
     constructor(props) {
@@ -85,7 +86,6 @@ class SingleBucketContainer extends React.Component {
         event.preventDefault();
         this.props.actions.createBucketItem(this.state.bucket, this.state.bucketitem);
         this.toggleDialog();
-        this.props.actions.getBucket();
         this.props.history.push('/buckets/' + this.state.bucket.id);
 
 
@@ -96,15 +96,14 @@ class SingleBucketContainer extends React.Component {
         const id = this.state.bucket.id;
         this.props.actions.updateBucketItem(this.state.bucket, this.state.bucketitem);
         this.setState({editingitem: !this.state.editingitem});
-        this.props.actions.getBucket();
         this.props.history.push('/buckets/' + id);
     }
 
     deleteBucketItem(event) {
         const bucket = this.state.bucket;
         const item_id = event.currentTarget.getAttribute('data-id');
-        this.props.actions.deleteBucketItem(bucket, item_id);
-        this.props.actions.getBucket();
+        const bucketlistitem = bucket.bucketlistitems.find(item=>item.id==item_id)
+        this.props.actions.deleteBucketItem(bucket,bucketlistitem ,item_id);
         this.props.history.push('/buckets/' + bucket.id);
 
     }
@@ -141,7 +140,7 @@ class SingleBucketContainer extends React.Component {
                     submit={this.createBucketItem}
                     onChange={this.updateBucketItemState}
                 />
-
+                {this.state.loading?<Loading/>:<div></div>}
             </div>
         );
     }
@@ -164,7 +163,12 @@ function mapStateToProps(state, props) {
         bucket = getBucketbyId(buckets, bucketId);
     }
 
-    return {bucket};
+    return {
+        bucket,
+        loading:state.loading
+
+
+    };
 }
 
 function mapDispatchToProps(dispatch) {

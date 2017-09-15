@@ -21,9 +21,12 @@ class BucketListContainer extends React.Component {
         super(props);
         this.state = {
             open: false,
-            exists: true
+            exists: true,
+            error:false,
+            snackbar:false
         };
         this.toggleDialog = this.toggleDialog.bind(this);
+        this.close = this.close.bind(this);
     }
 
     componentDidMount() {
@@ -31,33 +34,33 @@ class BucketListContainer extends React.Component {
     }
 
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps,nextState) {
         let params = parse(nextProps.location.search);
         let close = nextProps.location.state;
         if (params['q']) {
             this.props.actions.searchBucket(params);
             nextProps.location.search = "";
         } else if (close == "close") {
-            console.log(nextProps.location.state);
             this.setState({open: false});
-            this.props.actions.getBucket();
-            this.componentDidMount();
             nextProps.location.state = "";
         }
 
-    }
 
+    }
+    close(){
+        this.setState({open:false})
+    }
 
     toggleDialog() {
         this.setState({open: !this.state.open});
-        console.log("new state", this.state.open);
     }
 
     render() {
-
         const buckets = this.props.buckets;
         const loading = this.props.loading;
         const error = this.props.error;
+        const message = this.props.message
+
         if (loading == true) {
             return (<Loading/>);
         }
@@ -71,9 +74,16 @@ class BucketListContainer extends React.Component {
                     <Cell col={4} phone={3}>
                         <div className="master">
                             <AddBucketsContainer open={this.state.open} cancel={this.toggleDialog}/>
-                            {loading == false && buckets.length == 0 ? <NoBucketLists add={this.toggleDialog}/> :
-                                < BucketList buckets={buckets} add={this.toggleDialog}/>
+                            {loading == false && buckets.length==0 ? <NoBucketLists add={this.toggleDialog}/> :
+                                <BucketList buckets={buckets} add={this.toggleDialog}/>
                             }
+                            {error?<Error
+                                open={true}
+                                message={message}
+                                autoHideDuration={4000}
+                                close={this.close}
+                            />:<div></div>}
+
                         </div>
 
                     </Cell>
@@ -95,7 +105,6 @@ class BucketListContainer extends React.Component {
                     </Cell>
 
                 </Grid>
-
             </div>
 
         );
@@ -111,9 +120,10 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
     return {
         error: state.buckets.error,
+        message: state.buckets.message,
         loading: state.buckets.loading,
-        pages: state.buckets.data.pages,
         buckets: state.buckets.data.data,
+        status:state.buckets.data.status
 
     };
 }
