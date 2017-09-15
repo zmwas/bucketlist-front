@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import * as actions from '../actions/bucketActions';
+import * as item_actions from '../actions/itemActions';
 import SingleBucket from '../components/SingleBucket';
 import AddItemDialog from '../components/AddItemDialog';
 import Loading from '../components/Loading';
@@ -84,7 +85,7 @@ class SingleBucketContainer extends React.Component {
 
     createBucketItem(event) {
         event.preventDefault();
-        this.props.actions.createBucketItem(this.state.bucket, this.state.bucketitem);
+        this.props.item_actions.createBucketItem(this.state.bucket, this.state.bucketitem);
         this.toggleDialog();
         this.props.history.push('/buckets/' + this.state.bucket.id);
 
@@ -94,7 +95,7 @@ class SingleBucketContainer extends React.Component {
     updateBucketItem(event) {
         event.preventDefault();
         const id = this.state.bucket.id;
-        this.props.actions.updateBucketItem(this.state.bucket, this.state.bucketitem);
+        this.props.item_actions.updateBucketItem(this.state.bucket, this.state.bucketitem);
         this.setState({editingitem: !this.state.editingitem});
         this.props.history.push('/buckets/' + id);
     }
@@ -103,7 +104,7 @@ class SingleBucketContainer extends React.Component {
         const bucket = this.state.bucket;
         const item_id = event.currentTarget.getAttribute('data-id');
         const bucketlistitem = bucket.bucketlistitems.find(item=>item.id==item_id)
-        this.props.actions.deleteBucketItem(bucket,bucketlistitem ,item_id);
+        this.props.item_actions.deleteBucketItem(bucket,bucketlistitem ,item_id);
         this.props.history.push('/buckets/' + bucket.id);
 
     }
@@ -114,7 +115,6 @@ class SingleBucketContainer extends React.Component {
 
 
     render() {
-        console.log(this.props)
         return (
             <div>
                 <SingleBucket
@@ -174,6 +174,7 @@ function mapStateToProps(state, props) {
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(actions, dispatch),
+        item_actions: bindActionCreators(item_actions, dispatch)
     };
 }
 
