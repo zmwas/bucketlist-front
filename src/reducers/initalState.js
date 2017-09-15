@@ -3,6 +3,7 @@ export default {
   buckets: {
     error:false,
     loading:false,
+    message:'',
     data:{
       pages:0,
       status:'',
