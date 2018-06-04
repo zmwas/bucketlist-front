@@ -3,7 +3,7 @@ import { SIGN_UPUSER_SUCCESS, LOGIN_USER_SUCCESS, SIGN_UPUSER_FAILURE, LOGIN_USE
 
 
 export function createUserSuccess(user) {
-  return { type: SIGN_UPUSER_SUCCESS,user };
+  return { type: SIGN_UPUSER_SUCCESS };
 }
 export function createUserFailure(user){
     return { type: SIGN_UPUSER_FAILURE,user}

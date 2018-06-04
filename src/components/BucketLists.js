@@ -22,7 +22,6 @@ const style = {
 };
 const BucketLists = ({buckets, add,exists}) => (
     <div>
-        {buckets.length >0 ?
             <div>
                 <Card zDepth={3}>
                     <FloatingActionButton style={style} onClick={add}><ContentAdd/></FloatingActionButton>
@@ -40,7 +39,7 @@ const BucketLists = ({buckets, add,exists}) => (
                     </ListContainer>
                 </Card>
                 <IconButton><KeyBoardArrowLeft/></IconButton> <IconButton><KeyBoardArrowRight/></IconButton>
-            </div> : <Loading/>}</div>
+            </div></div>
 );
 
 export default BucketLists;

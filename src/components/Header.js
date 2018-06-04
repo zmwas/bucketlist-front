@@ -6,7 +6,7 @@ import SearchBar from './SearchBar';
 
 const Header = ({handleChange,enter}) => (
     <MuiThemeProvider>
-        <AppBar title="A new name">
+        <AppBar title="BucketList Goals">
             <SearchBar handleChange={handleChange} enter={enter}/>
         </AppBar>
     </MuiThemeProvider>

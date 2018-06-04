@@ -7,6 +7,7 @@ import * as actions from '../actions/bucketActions';
 import { withRouter } from 'react-router';
 
 import BucketForm from '../components/BucketForm';
+import Error from '../components/Error'
 
 
 class BucketsContainer extends React.Component {
@@ -16,6 +17,7 @@ class BucketsContainer extends React.Component {
       bucket: {
         title: '',
         description: '',
+
 
       },
     };
@@ -28,6 +30,7 @@ class BucketsContainer extends React.Component {
     event.preventDefault();
     this.props.actions.createBucket(this.state.bucket);
     this.props.history.push({pathname:'/buckets/',state:"close"});
+
 
   }
 
@@ -50,7 +53,9 @@ class BucketsContainer extends React.Component {
   }
 
   render() {
-    return (
+      const error = this.props.error;
+      return (
+        <div>
       <BucketForm
         bucket={this.state.bucket}
         open={this.props.open}
@@ -60,6 +65,8 @@ class BucketsContainer extends React.Component {
         changeDescription={this.changeDescription}
         btnName="CREATE"
       />
+
+        </div>
     );
   }
 }
@@ -73,6 +80,13 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(actions, dispatch),
   };
+}
+function mapStateToProps(state){
+  return {
+    error:state.buckets.error,
+    loading:state.buckets.loading,
+    status:state.buckets.status
+  }
 }
 
 export default withRouter(connect(null, mapDispatchToProps)(BucketsContainer));

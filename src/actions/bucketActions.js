@@ -2,107 +2,113 @@ import BucketService from '../api/bucketService';
 import * as types from './actiontypes';
 
 
-export function createBucketSuccess(bucket) {
-    return {type: types.CREATE_BUCKET_SUCCESS,bucket};
-}
-export function createBucketFailure(response) {
-    return {type: types.CREATE_BUCKET_FAILURE};
-}
-export function getBucketsSuccess(buckets) {
-    return {type: types.GET_BUCKETS_SUCCESS, buckets};
-}
-export function getBucketsFailure(buckets) {
-    return {type: types.GET_BUCKETS_FAILURE, buckets};
-}
-export function searchBucketsSuccess(buckets) {
-    return {type: types.SEARCH_BUCKETS_SUCCESS, buckets};
-}
-export function searchBucketsFailure(buckets) {
-    return {type: types.SEARCH_BUCKETS_FAILURE, buckets};
+export function createBucketLoading(status) {
+    return {type: types.CREATE_BUCKET_LOADING, loading: status, error: false};
 }
 
-export function updateBucketSuccess(bucket) {
-    return {type: types.UPDATE_BUCKET_SUCCESS, bucket};
+export function createBucketSuccess(payload) {
+    return {type: types.CREATE_BUCKET_SUCCESS, payload, error: false, loading: false};
 }
-export function updateBucketFailure(bucket) {
-    return {type: types.UPDATE_BUCKET_FAILURE, bucket};
+
+export function createBucketFailure(message) {
+    return {type: types.CREATE_BUCKET_FAILURE, error: true, message, loading: false};
 }
+
+export function getBucketsLoading(status) {
+    return {type: types.GET_BUCKETS_LOADING, loading: status, error: false};
+}
+
+export function getBucketsSuccess(payload) {
+    return {type: types.GET_BUCKETS_SUCCESS, payload, error: false, loading: false};
+}
+
+export function getBucketsFailure(message) {
+    return {type: types.GET_BUCKETS_FAILURE, message, error: true, loading: false};
+}
+
+export function searchBucketsLoading(status) {
+    return {type: types.SEARCH_BUCKETS_LOADING, error: false, loading: status};
+}
+
+export function searchBucketsSuccess(payload) {
+    return {type: types.SEARCH_BUCKETS_SUCCESS, payload, error: false, loading: false};
+}
+
+export function searchBucketsFailure(message) {
+    return {type: types.SEARCH_BUCKETS_FAILURE, message, error: true, loading: false};
+}
+
+export function updateBucketLoading(status) {
+    return {type: types.UPDATE_BUCKET_LOADING, error: false, loading: status};
+}
+
+export function updateBucketSuccess(payload) {
+    return {type: types.UPDATE_BUCKET_SUCCESS, payload, error: false, loading: false};
+}
+
+export function deleteBucketLoading(status) {
+    return {type: types.DELETE_BUCKET_LOADING, error: false, loading: status};
+}
+
+export function updateBucketFailure(message) {
+    return {type: types.UPDATE_BUCKET_FAILURE, message, error: true, loading: false};
+}
+
 export function deleteBucketSuccess(bucket) {
-    return {type: types.DELETE_BUCKET_SUCCESS, bucket};
-}
-export function deleteBucketFailure(bucket) {
-    return {type: types.DELETE_BUCKET_FAILURE, bucket};
-}
-export function createBucketItemSuccess(response) {
-    return {type: types.CREATE_BUCKET_ITEM_SUCCESS};
+    return {type: types.DELETE_BUCKET_SUCCESS, bucket, error: false, loading: false};
 }
 
-export function updateBucketItemSuccess(bucket) {
-    return {type: types.UPDATE_BUCKET_ITEM_SUCCESS, bucket};
+export function deleteBucketFailure(message) {
+    return {type: types.DELETE_BUCKET_FAILURE, message, error: true, loading: false};
 }
 
-export function deleteBucketItemSuccess(bucket) {
-    return {type: types.DELETE_BUCKET_ITEM_SUCCESS, bucket};
-}
 
 export function createBucket(bucket) {
-    return dispatch => BucketService.post('/bucketlist/', bucket, (status, data) => dispatch(createBucketSuccess(data))).catch((error) => {
-        throw (error);
-    });
+    return dispatch => {
+        dispatch(createBucketLoading(true));
+        BucketService.post('/bucketlist/', bucket, (status, data) => dispatch(createBucketSuccess(data))).catch((error) => {
+            dispatch(createBucketFailure(error.response.data.message));
+        });
+
+    };
 }
 
 export function getBucket() {
-    return dispatch => BucketService.get('/bucketlist/', (status, data) => dispatch(getBucketsSuccess(data))).catch((error) => {
-        return dispatch(getBucketsFailure(error))
-
-    });
+    return dispatch => {
+        dispatch(getBucketsLoading(true));
+        BucketService.get('/bucketlist/', (status, data) => dispatch(getBucketsSuccess(data))).catch((error) => {
+            return dispatch(getBucketsFailure(error.response.data.message));
+        });
+    };
 }
 
 export function searchBucket(params) {
-    return dispatch => BucketService.search('/bucketlist/',params, (status, data) => dispatch(searchBucketsSuccess(data))).catch((error) => {
-        throw (error);
-    });
+    return dispatch => {
+        dispatch(searchBucketsLoading(true));
+        BucketService.search('/bucketlist/', params, (status, data) => dispatch(searchBucketsSuccess(data)))
+            .catch((error) => {
+                dispatch(searchBucketsFailure(error.response.data.message));
+            });
+
+    };
 }
 
 export function updateBucket(bucket) {
-    return dispatch => BucketService.put(`/bucketlist/${bucket.id}`, bucket, (status, data) => dispatch(updateBucketSuccess(bucket))).catch((error) => {
-        throw (error);
-    });
+    return dispatch => {
+        dispatch(updateBucketLoading(true));
+        BucketService.put(`/bucketlist/${bucket.id}`, bucket, (status, data) => dispatch(updateBucketSuccess(data)))
+            .catch((error) => {
+                dispatch(updateBucketFailure(error.response.data.message));
+            });
+    };
 }
 
 export function deleteBucket(bucket) {
-    return dispatch => BucketService.delete(`/bucketlist/${bucket.id}`, (status, data) => dispatch(deleteBucketSuccess(bucket))).catch((error) => {
-        throw (error);
-    });
-}
-
-export function createBucketItem(bucket, bucketlistitem) {
-
-    return dispatch => BucketService.post(`/bucketlist/${bucket.id}/items`, bucketlistitem, (status, data) => dispatch(createBucketItemSuccess(bucket))).catch((error) => {
-        console.log(error.response);
-
-        throw (error);
-    });
-}
-
-
-export function updateBucketItem(bucket, bucketlistitem) {
-    return dispatch => BucketService.put(`/bucketlist/${bucket.id}/` + `items/${bucketlistitem.id}`,
-        bucketlistitem, (status, data) => {
-            const index = bucket.bucketlistitems.findIndex(item => item.id == bucketlistitem.id);
-            bucket.bucketlistitems.splice(index, 1, bucketlistitem);
-            return dispatch(updateBucketItemSuccess(bucket));
-        }).catch((error) => {
-        throw (error);
-    });
-}
-
-export function deleteBucketItem(bucket, item_id) {
-    return dispatch => BucketService.delete(`/bucketlist/${bucket.id}/` + `items/${item_id}`, (status, data) => {
-        const index = bucket.bucketlistitems.findIndex(item => item.id == item_id);
-        bucket.bucketlistitems.splice(index, 1);
-        return dispatch(deleteBucketItemSuccess(bucket));
-    }).catch((error) => {
-        throw (error);
-    });
+    return dispatch => {
+        dispatch(deleteBucketLoading(true));
+        BucketService.delete(`/bucketlist/${bucket.id}`, (status, data) => dispatch(deleteBucketSuccess(bucket)))
+            .catch((error) => {
+                dispatch(deleteBucketFailure(error.response.data.message));
+            });
+    };
 }
